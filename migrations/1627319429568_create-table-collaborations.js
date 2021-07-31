@@ -11,10 +11,12 @@ exports.up = (pgm) => {
         playlist_id: {
             type: 'VARCHAR(50)',
             notNull: true,
+            unique: true,
         },
         user_id: {
             type: 'VARCHAR(50)',
             notNull: true,
+            unique: true,
         },
     });
 

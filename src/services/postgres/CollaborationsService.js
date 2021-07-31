@@ -31,7 +31,7 @@ class CollaborationsService {
             values: [playlistId, userId],
         };
         const result = await this._pool.query(query);
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('Kolaborasi gagal dihapus');
         }
     }
@@ -43,7 +43,7 @@ class CollaborationsService {
             values: [playlistId, collaborator],
         };
         const result = await this._pool.query(query);
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new AuthorizationsError('Anda tidak berhak mengakses resource ini.');
         }
     }

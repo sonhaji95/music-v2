@@ -67,6 +67,7 @@ const init = async () => {
     return response.continue || response;
   });
 
+
   // registrasi plugin eksternal
   await server.register([
     {
