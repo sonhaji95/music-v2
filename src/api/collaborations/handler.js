@@ -20,7 +20,7 @@ class CollaborationsHandler {
     const collaborationId = await this._collaborationService.addUserToCollaboration(playlistId, userId);
     const response = h.response({
       status: 'success',
-      message: 'User kolaborasi berhasil ditambahkan',
+      message: 'Kolaborasi berhasil ditambahkan',
       data: {
         collaborationId,
       },
@@ -39,7 +39,7 @@ class CollaborationsHandler {
     await this._collaborationService.deleteUserFromCollaboration(playlistId, userId);
     return {
       status: 'success',
-      message: 'User kolaborasi berhasil dihapus',
+      message: 'Kolaborasi berhasil dihapus',
     };
   }
 }
