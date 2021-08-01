@@ -10,23 +10,9 @@ class UsersService {
     constructor() {
         this._pool = new Pool();
     }
-    
-    //verivikasi user baru
-    async verifyNewUsername(username) {
-        const query = {
-            text: 'SELECT username FROM users WHERE username = $1 ',
-            values: [username],
-        };
-
-        const result = await this._pool.query(query);
-
-        if (result.rows.length > 0) {
-            throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
-        };
-    }
-
     //fungsi add user
     async addUser({ username, password, fullname }) {
+    
         await this.verifyNewUsername(username);
 
         const id = `user-${nanoid(16)}`;
@@ -43,6 +29,20 @@ class UsersService {
             throw new InvariantError('User gagal ditambahkan');
         }
         return result.rows[0].id;
+    }
+
+     //verivikasi user baru
+    async verifyNewUsername(username) {
+        const query = {
+            text: 'SELECT username FROM users WHERE username = $1 ',
+            values: [username],
+        };
+
+        const result = await this._pool.query(query);
+
+        if (result.rows.length > 0) {
+            throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
+        };
     }
 
     //fungsi get user by id

@@ -10,6 +10,7 @@ class PlaylistsHandler {
         this.postSongToPlaylistHandler = this.postSongToPlaylistHandler.bind(this);
         this.getSongsFromPlaylistHandler = this.getSongsFromPlaylistHandler.bind(this);
         this.deleteSongToPlaylistHandler = this.deleteSongToPlaylistHandler.bind(this);
+        this.getUsersByUsernameHandler = this.getUsersByUsernameHandler.bind(this);
     }
 
     //post playlist
@@ -24,7 +25,7 @@ class PlaylistsHandler {
 
             const response = h.response({
                 status: 'success',
-                message: 'Playlist berhasil ditambhakan',
+                message: 'Playlist berhasil ditambahkan',
                 data: {
                     playlistId,
                 },
