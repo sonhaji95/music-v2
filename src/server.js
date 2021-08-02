@@ -97,14 +97,14 @@ const init = async () => {
     {
       plugin: songs,
       options: {
-        service: songsService,
+        songService: songsService,
         validator: SongsValidator,
       },
     },
     {
       plugin: users,
       options: {
-        service: usersService,
+        userService: usersService,
         validator: UsersValidator,
       },
     },
@@ -120,7 +120,7 @@ const init = async () => {
     {
       plugin: playlists,
       options: {
-        service: playlistsService,
+        playlistService: playlistsService,
         validator: PlaylistsValidator,
       },
     },
@@ -137,5 +137,15 @@ const init = async () => {
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
+
+process.on('unhandledRejection', (error, h) => {
+   const errResponse = h.response({
+      status: 'error',
+      message: 'Maaf, terjadi kegagalan pada server kami.',
+    });
+    response.code(500);
+    console.log(error);
+    return errResponse;
+});
 
 init();

@@ -5,23 +5,19 @@ exports.shorthands = undefined;
 exports.up = (pgm) => {
     pgm.createTable('playlistsongs', {
         id: {
-            type: 'SERIAL',
+            type: 'VARCHAR(50)',
             primaryKey: true,
         },
         playlist_id: {
             type: 'VARCHAR(50)',
             notNull: true,
-            unique: true,
         },
         song_id: {
             type: 'VARCHAR(50)',
             notNull: true,
-            unique: true,
         },
     });
 
-    pgm.addConstraint('playlistsongs',
-    'unique_playlist_id_and_song_id', 'UNIQUE(playlist_id, song_id)');
     //fk pada column playlist_id
     pgm.addConstraint('playlistsongs',
     'fk_playlistsongs.playlist_id_playlists.id', 'FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE');
