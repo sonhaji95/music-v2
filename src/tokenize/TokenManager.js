@@ -11,9 +11,9 @@ const TokenManager = {
             Jwt.token.verifySignature(artifacts, process.env.REFRESH_TOKEN_KEY);
             const { payload } = artifacts.decoded;
             return payload; //create access new token
-        }catch (error){
+        } catch (error) {
             throw new InvariantError('Refresh token tidak valid');
-        };
+        }
     },
 };
 

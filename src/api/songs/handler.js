@@ -12,15 +12,16 @@ class SongsHandler {
     
     //handler Create
     async postSongHandler(request, h) {
-            this._validator.validateSongPayload(request.payload);
-            const { title = 'untitled', year, performer, genre, duration } =  request.payload;
-            const songId = await this._service.addSong({ title, year, performer, genre, duration, });
-
-            const response = h.response ({
-                status: 'success',
-                message: 'Lagu berhasil ditambahkan',
-                data: {
-                    songId,
+        
+        this._validator.validateSongPayload(request.payload);
+        const { title = 'untitled', year, performer, genre, duration } = request.payload;
+        const songId = await this._service.addSong({ title, year, performer, genre, duration });
+        
+        const response = h.response({
+            status: 'success',
+            message: 'Lagu berhasil ditambahkan',
+            data: {
+                songId,
                 },
             });
             response.code(201);
@@ -39,7 +40,7 @@ class SongsHandler {
         } 
 
     //handler Read song Id
-    async getSongByIdHandler(request, h) {
+    async getSongByIdHandler(request) {
             const { id } = request.params;
             const song = await this._service.getSongById(id);
             return {

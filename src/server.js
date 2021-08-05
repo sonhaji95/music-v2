@@ -67,7 +67,6 @@ const init = async () => {
     return response.continue || response;
   });
 
-
   // registrasi plugin eksternal
   await server.register([
     {
@@ -139,13 +138,13 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (error, h) => {
-   const errResponse = h.response({
+   const response = h.response({
       status: 'error',
       message: 'Maaf, terjadi kegagalan pada server kami.',
     });
     response.code(500);
-    console.log(error);
-    return errResponse;
+    console.error(error);
+    return response;
 });
 
 init();

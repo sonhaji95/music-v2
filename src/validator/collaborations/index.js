@@ -7,7 +7,7 @@ const CollaborationsValidator = {
 
         if (validationResult.error) {
             throw new InvariantError(validationResult.error.message);
-        };
+        }
     },
 
     validateDeleteCollaborationPayload: (payload) => {
@@ -15,7 +15,7 @@ const CollaborationsValidator = {
 
         if (validationResult.error) {
             throw new InvariantError(validationResult.error.message);
-        };
+        }
     },
 };
 

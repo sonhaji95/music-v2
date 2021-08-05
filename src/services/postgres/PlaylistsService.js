@@ -1,5 +1,5 @@
-const { nanoid } = require("nanoid");
-const { Pool } = require("pg");
+const { nanoid } = require('nanoid');
+const { Pool } = require('pg');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
@@ -21,18 +21,18 @@ class PlaylistsService {
 
         if (!result.rows[0].id) {
             throw new InvariantError('Playlist gagal ditambahkan');
-        };
+        }
 
         return result.rows[0].id;
     }
 
-    async getPlaylists(user) {
+    async getPlaylists(owner) {
         const query = {
             text: `SELECT playlists.id, playlists.name, users.username FROM playlists 
             LEFT JOIN users ON users.id = playlists.owner 
             LEFT JOIN collaborations ON playlists.id = collaborations.playlist_id
             WHERE playlists.owner = $1 OR collaborations.user_id = $1`,
-            values: [user],
+            values: [owner],
         };
 
         const result = await this._pool.query(query);
@@ -47,9 +47,9 @@ class PlaylistsService {
 
         const result = await this._pool.query(query);
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
-        };
+        }
     }
 
     async addSongToPlaylist(playlistId, songId) {
@@ -61,10 +61,9 @@ class PlaylistsService {
         };
 
         const result = await this._pool.query(query);
-
         if (!result.rows[0].id) {
             throw new InvariantError('Lagu gagal ditambahkan ke playlist');
-        };
+        }
     }
 
     async getSongsFromPlaylist(playlistId) {
@@ -85,7 +84,7 @@ class PlaylistsService {
         };
 
         const result = await this._pool.query(query);
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('Lagu gagal dihapus dari playlist');
         }
     }
@@ -97,7 +96,7 @@ class PlaylistsService {
         };
         const result = await this._pool.query(query);
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new NotFoundError('Resource yang Anda minta tidak ditemukan');
         }
         

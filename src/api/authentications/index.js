@@ -10,14 +10,12 @@ module.exports = {
     tokenManager,
     validator,
   }) => {
-    // eslint-disable-next-line no-undef
     const authenticationsHandler = new AuthenticationsHandler(
       authenticationService,
       userService,
       tokenManager,
       validator,
     );
-    // eslint-disable-next-line no-undef
     server.route(routes(authenticationsHandler));
   },
 };

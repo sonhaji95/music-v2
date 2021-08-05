@@ -17,9 +17,9 @@ class CollaborationsService {
         };
         const result = await this._pool.query(query);
 
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('Kolaborasi gagal ditambahkan');
-        };
+        }
         return result.rows[0].id;
     }
 
@@ -42,7 +42,7 @@ class CollaborationsService {
             values: [playlistId, userId],
         };
         const result = await this._pool.query(query);
-        if (!result.rows.length) {
+        if (!result.rowCount) {
             throw new InvariantError('Kolaborasi gagal diverivikasi');
         }
     }

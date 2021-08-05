@@ -10,9 +10,9 @@ class UsersService {
     constructor() {
         this._pool = new Pool();
     }
+    
     //fungsi add user
     async addUser({ username, password, fullname }) {
-    
         await this.verifyNewUsername(username);
 
         const id = `user-${nanoid(16)}`;
@@ -22,7 +22,6 @@ class UsersService {
             text: 'INSERT INTO users VALUES($1, $2, $3, $4) RETURNING id',
             values: [id, username, hashedPassword, fullname],
         };
-        //console.log(query.values);
 
         const result = await this._pool.query(query);
         if (!result.rowCount) {
@@ -40,9 +39,9 @@ class UsersService {
 
         const result = await this._pool.query(query);
 
-        if (result.rows.length > 0) {
+        if (result.rowCount) {
             throw new InvariantError('Gagal menambahkan user. Username sudah digunakan');
-        };
+        }
     }
 
     //fungsi get user by id
@@ -55,7 +54,7 @@ class UsersService {
         const result = await this._pool.query(query);
         if (!result.rowCount) {
             throw new NotFoundError('User tidak ditemukan');       
-        };
+        }
         return result.rows[0];
     }
 
@@ -70,17 +69,15 @@ class UsersService {
 
         if (!result.rowCount) {
             throw new AuthenticationError('Kredensial yang anda berikan salah');
-        };
-
-        const { id, password: hashedPassword} = result.rows[0];
+        }
+        const { id, password: hashedPassword } = result.rows[0];
 
         //Komparasi hashedPassword 
         const match = await bcrypt.compare(password, hashedPassword);
 
         if (!match) {
             throw new AuthenticationError('Kredensial yang Anda berikan salah');
-        };
-        
+        }  
         return id;
     }
 }
