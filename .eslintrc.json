@@ -19,7 +19,8 @@
         "indent": "off",
         "eol-last": "off",
         "no-trailing-spaces": "off",
-        "padded-blocks": "off"
-
+        "padded-blocks": "off",
+        "object-curly-newline": "off",
+        "newline-per-chained-call": "off"
     }
 }
