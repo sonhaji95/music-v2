@@ -4,6 +4,7 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const ClientError = require('./exceptions/ClientError');
+const path = require('path');
 
 //songs
 const songs = require('./api/songs');
@@ -31,12 +32,23 @@ const CollaborationsValidator = require('./validator/collaborations');
 const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 
+//Exports
+const _exports = require('./api/exports');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportsValidator = require('./validator/exports');
+
+//Uploads
+const uploads = require('./api/uploads');
+const StorageService = require('./services/storage/StorageService');
+const UploadsValidator = require('./validator/uploads');
+
 const init = async () => {
   const songsService = new SongsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const collaborationsService = new CollaborationsService();
   const playlistsService = new PlaylistsService(collaborationsService);
+  const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -131,20 +143,31 @@ const init = async () => {
         validator: CollaborationsValidator,
       },
     },
+    {
+      plugin: _exports,
+      options: {
+        service: ProducerService,
+        validator: ExportsValidator,
+        playlistsService,
+      },
+    },
+    {
+      plugin: uploads,
+      options: {
+        service: storageService,
+        validator: UploadsValidator,
+      },
+    },
   ]);
 
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
-process.on('unhandledRejection', (error, h) => {
-   const response = h.response({
-      status: 'error',
-      message: 'Maaf, terjadi kegagalan pada server kami.',
-    });
-    response.code(500);
-    console.error(error);
-    return response;
+process.on('unhandledRejection', (err) => {
+  
+    console.error(err);
+    process.exit(1);
 });
 
 init();
