@@ -3,8 +3,8 @@ require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
-const ClientError = require('./exceptions/ClientError');
 const path = require('path');
+const ClientError = require('./exceptions/ClientError');
 
 //songs
 const songs = require('./api/songs');
@@ -28,8 +28,8 @@ const PlaylistsService = require('./services/postgres/PlaylistsService');
 const PlaylistsValidator = require('./validator/playlists');
 
 //collaborations
-const CollaborationsValidator = require('./validator/collaborations');
 const collaborations = require('./api/collaborations');
+const CollaborationsValidator = require('./validator/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 
 //Exports
@@ -42,14 +42,18 @@ const uploads = require('./api/uploads');
 const StorageService = require('./services/storage/StorageService');
 const UploadsValidator = require('./validator/uploads');
 
+// Cache
+const CacheService = require('./services/redis/CacheService');
+
 const init = async () => {
+  const cacheService = new CacheService();
   const songsService = new SongsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const collaborationsService = new CollaborationsService();
-  const playlistsService = new PlaylistsService(collaborationsService);
+  const playlistsService = new PlaylistsService(collaborationsService, cacheService);
   const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
-
+  
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.HOST,

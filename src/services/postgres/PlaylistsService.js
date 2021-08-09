@@ -51,9 +51,11 @@ class PlaylistsService {
         if (!result.rowCount) {
             throw new NotFoundError('Playlist gagal dihapus. Id tidak ditemukan');
         }
+
+        await this._cacheService.delete(`playlists:${id}`);
     }
 
-    async addSongToPlaylist(playlistId, { songId }) {
+    async addSongToPlaylist(playlistId, songId) {
         const id = `playlistsong-${nanoid(16)}`;
 
         const query = {
@@ -85,7 +87,7 @@ class PlaylistsService {
 
         const result = await this._pool.query(query);
         if (!result.rowCount) {
-            throw new NotFoundError('Playlist gagal ditampilkan. Id tidak ditemukan.');
+            throw new NotFoundError('Playlistsongs tidak ditemukan');
         }
         //lagu disimpan ke cache sebelum di return
         await this._cacheService.set(`playlists:${playlistId}`, JSON.stringify(result.rows));
@@ -93,7 +95,7 @@ class PlaylistsService {
         }
     }
 
-    async deleteSongFromPlaylist(playlistId, { songId }) {
+    async deleteSongFromPlaylist(playlistId, songId) {
         const query = {
             text: 'DELETE FROM playlistsongs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
             values: [playlistId, songId],

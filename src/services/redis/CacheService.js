@@ -7,7 +7,7 @@ class CacheService {
         });
 
         this._client.on('error', (error) => {
-            console.error(error);
+            throw error;
         });
     }
 
@@ -29,7 +29,7 @@ class CacheService {
                     return reject(error);
                 }
                 if (reply === null) {
-                    return reject(new error('Cache tidak ditemukan'));
+                    return reject(new Error('Cache tidak ditemukan'));
                 }
                 return resolve(reply.toString());
             });
